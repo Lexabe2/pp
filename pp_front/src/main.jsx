@@ -15,10 +15,8 @@ function SWUpdater() {
         }
     })
 
-    // Показываем кнопку только в dev и если есть обновление
-    if (import.meta.env.MODE === 'production' || !needRefresh) {
-        return null
-    }
+    // Показываем кнопку только если есть новая версия
+    if (!needRefresh) return null
 
     return (
         <button
@@ -33,7 +31,11 @@ function SWUpdater() {
                 borderRadius: '8px',
                 cursor: 'pointer'
             }}
-            onClick={() => updateServiceWorker()}
+            onClick={() => {
+                updateServiceWorker(true).then(() => {
+                    window.location.reload()
+                })
+            }}
         >
             Обновить приложение
         </button>
