@@ -1,22 +1,29 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
 import './index.css'
-import {useRegisterSW} from 'virtual:pwa-register/react'
+import { useRegisterSW } from 'virtual:pwa-register/react'
 
-// Компонент для кнопки обновления приложения
 function SWUpdater() {
-    const {needRefresh, updateServiceWorker} = useRegisterSW({
+    const [hasUpdate, setHasUpdate] = useState(false)
+
+    const { registration, updateServiceWorker } = useRegisterSW({
         onRegistered(r) {
-            console.log('Service worker registered:', r)
+            console.log('Service Worker registered:', r)
         },
         onRegisterError(error) {
             console.error('SW registration error:', error)
         }
     })
 
-    // Показываем кнопку только если есть новая версия
-    if (!needRefresh) return null
+    // Следим за registration.waiting
+    useEffect(() => {
+        if (registration?.waiting) {
+            setHasUpdate(true)
+        }
+    }, [registration])
+
+    if (!hasUpdate) return null
 
     return (
         <button
@@ -32,9 +39,7 @@ function SWUpdater() {
                 cursor: 'pointer'
             }}
             onClick={() => {
-                updateServiceWorker(true).then(() => {
-                    window.location.reload()
-                })
+                updateServiceWorker(true).then(() => window.location.reload())
             }}
         >
             Обновить приложение
@@ -44,7 +49,7 @@ function SWUpdater() {
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
-        <App/>
-        <SWUpdater/>
+        <App />
+        <SWUpdater />
     </React.StrictMode>
 )
