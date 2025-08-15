@@ -8,7 +8,7 @@ SECRET_KEY = config('SECRET_KEY')
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['pp-bao.ru', 'api.pp-bao.ru']
 
 INSTALLED_APPS = [
     "rest_framework",
@@ -50,6 +50,7 @@ ROOT_URLCONF = 'PP_bac.urls'
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    'https://pp-bao.ru',
 ]
 
 TEMPLATES = [
