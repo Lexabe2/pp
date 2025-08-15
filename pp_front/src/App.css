@@ -558,3 +558,9 @@
         flex: none;
     }
 }
+
+html, body {
+  background-color: #317EFB; /* твой цвет */
+  height: 100%;
+  margin: 0;
+}
