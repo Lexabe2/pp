@@ -475,7 +475,7 @@ export default function App() {
           >
             <HiSparkles size={64} />
           </motion.div>
-          <h1>Добро пожаловать!</h1>
+          <h1>Добро пожаловать сэр!</h1>
           <p>Вы успешно авторизованы и можете использовать приложение</p>
         </motion.div>
 
