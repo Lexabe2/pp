@@ -8,7 +8,7 @@ SECRET_KEY = config('SECRET_KEY')
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['pp-bao.ru', 'api.pp-bao.ru']
+ALLOWED_HOSTS = ['pp-bao.ru', 'api.pp-bao.ru', 'localhost', '127.0.0.1']
 
 INSTALLED_APPS = [
     "rest_framework",
