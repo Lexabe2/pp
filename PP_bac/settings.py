@@ -70,17 +70,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'PP_bac.wsgi.application'
 
-DJANGO_ENV = os.getenv("DJANGO_ENV", "local")
+DJANGO_ENV = config('DJANGO_ENV', default='local')
 
 if DJANGO_ENV == "production":
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.getenv('DB_NAME'),
-            'USER': os.getenv('DB_USER'),
-            'PASSWORD': os.getenv('DB_PASSWORD'),
-            'HOST': os.getenv('DB_HOST', 'localhost'),
-            'PORT': os.getenv('DB_PORT', '5432'),
+            'NAME': config('DB_NAME'),
+            'USER': config('DB_USER'),
+            'PASSWORD': config('DB_PASSWORD'),
+            'HOST': config('DB_HOST', default='localhost'),
+            'PORT': config('DB_PORT', default='5432'),
         }
     }
 else:  # локально (SQLite)
