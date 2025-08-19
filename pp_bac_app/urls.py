@@ -7,8 +7,8 @@ router = DefaultRouter()
 router.register(r'users', UserViewSet, basename='user')
 
 urlpatterns = [
-    path('', include(router.urls)),            # маршруты UserViewSet
-    path('api-token-auth/', obtain_auth_token), # стандартный логин по токену
+    path('', include(router.urls)),  # маршруты UserViewSet
+    path('api-token-auth/', obtain_auth_token),  # стандартный логин по токену
     path('auth/login-send-code/', login_send_code, name='login-send-code'),  # шаг 1: логин + пароль → код
-    path('auth/verify-code/', verify_telegram_code, name='verify-code'),    # шаг 2: проверка кода → токен
+    path('auth/verify-code/', verify_telegram_code, name='verify-code'),  # шаг 2: проверка кода → токен
 ]
