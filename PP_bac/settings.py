@@ -83,7 +83,7 @@ if DJANGO_ENV == "production":
             'PORT': config('DB_PORT', default='5432'),
         }
     }
-else:  # локально (SQLite)
+else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
