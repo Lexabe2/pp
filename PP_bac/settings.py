@@ -7,6 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = True
 
+
 ALLOWED_HOSTS = ['pp-bao.ru', 'api.pp-bao.ru', 'localhost', '127.0.0.1']
 
 INSTALLED_APPS = [
@@ -76,11 +77,11 @@ if DJANGO_ENV == "production":
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': config('DB_NAME'),
-            'USER': config('DB_USER'),
-            'PASSWORD': config('DB_PASSWORD'),
-            'HOST': config('DB_HOST', default='localhost'),
-            'PORT': config('DB_PORT', default='5432'),
+            'NAME': 'pp_work',
+            'USER': 'gen_user',
+            'PASSWORD': 'dfdfyz12',
+            'HOST': '89.223.125.202',
+            'PORT': '5432',
         }
     }
 else:
