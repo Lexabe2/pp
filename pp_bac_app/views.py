@@ -43,7 +43,7 @@ def login_send_code(request):
     codes_storage[user.id] = code
 
     # Отправка кода через синхронную обёртку
-    send_telegram_code(user.profile.telegram_id, f"Ваш код: {code}")
+    send_telegram_code(int(user.profile.telegram_id), f"Ваш код: {code}")
 
     return Response({"message": "Код отправлен"})
 
