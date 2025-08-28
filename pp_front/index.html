@@ -1,16 +1,39 @@
-<!-- index.html -->
 <!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8"/>
     <link rel="icon" type="image/svg+xml" href="/vite.svg"/>
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>ПП</title>
+    <meta name="theme-color" content="#667eea">
+    <meta name="msapplication-navbutton-color" content="#667eea">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link href="./src/index.css" rel="stylesheet">
+    <title>Улучшение дизайна приложения</title>
+    <style>
+        html, body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        /* Для PWA - убираем возможные белые полосы */
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Фон для статус-бара в PWA */
+        @media (display-mode: standalone) {
+            html, body {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+                padding-top: env(safe-area-inset-top);
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+        }
+    </style>
 </head>
 <body>
 <div id="root"></div>
-<script type="module" src="/src/main.jsx"></script>
+<script type="module" src="./src/main.jsx"></script>
 </body>
 </html>

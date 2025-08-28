@@ -6,6 +6,7 @@ export default defineConfig(({ mode }) => {
   const isDev = mode === 'development'
 
   return {
+    base: '/',   // 👈 это ключевое!
     plugins: [
       react(),
       VitePWA({

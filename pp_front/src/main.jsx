@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, {useState, useEffect} from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
 import './index.css'
-import { useRegisterSW } from 'virtual:pwa-register/react'
+import {useRegisterSW} from 'virtual:pwa-register/react'
+import {BrowserRouter} from 'react-router-dom'
 
 function SWUpdater() {
     const [hasUpdate, setHasUpdate] = useState(false)
 
-    const { registration, updateServiceWorker } = useRegisterSW({
+    const {registration, updateServiceWorker} = useRegisterSW({
         onRegistered(r) {
             console.log('Service Worker registered:', r)
         },
@@ -49,7 +50,9 @@ function SWUpdater() {
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
-        <App />
-        <SWUpdater />
+        <BrowserRouter>
+            <App/>
+            <SWUpdater/>
+        </BrowserRouter>
     </React.StrictMode>
 )
