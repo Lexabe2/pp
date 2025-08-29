@@ -140,6 +140,8 @@ export default function AutocompleteModal({ isOpen, onClose, onSubmit }) {
     setInputValue(suggestion);
     setShowSuggestions(false);
     setSelectedIndex(-1);
+
+    // Автоматически отправляем при выборе из подсказок (они точно есть в БД)
     setIsAnimating(true);
 
     // Добавляем в недавние поиски
@@ -163,6 +165,12 @@ export default function AutocompleteModal({ isOpen, onClose, onSubmit }) {
   // Отправка формы
   const handleSubmit = () => {
     if (!inputValue.trim() || inputValue.length !== 10 || !inputValue.startsWith('Y')) return;
+
+    // Проверяем существование в базе данных
+    if (!mockDatabase.includes(inputValue)) {
+      alert(`❌ Серийный номер ${inputValue} не найден в базе данных!`);
+      return;
+    }
 
     setIsAnimating(true);
 
@@ -369,13 +377,15 @@ export default function AutocompleteModal({ isOpen, onClose, onSubmit }) {
           {/* Submit Button */}
           <button
             onClick={handleSubmit}
-            disabled={!inputValue.trim() || inputValue.length !== 10 || !inputValue.startsWith('Y')}
+            disabled={!inputValue.trim() || inputValue.length !== 10 || !inputValue.startsWith('Y') || !mockDatabase.includes(inputValue)}
             className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 hover:from-blue-600 hover:via-indigo-600 hover:to-purple-600 disabled:from-gray-300 disabled:via-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed text-white font-bold rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl disabled:shadow-none transform hover:scale-[1.02] active:scale-[0.98] disabled:transform-none relative overflow-hidden group"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
             <span className="relative z-10 text-sm sm:text-base">
-              {inputValue.trim() && inputValue.length === 10 && inputValue.startsWith('Y')
+              {inputValue.trim() && inputValue.length === 10 && inputValue.startsWith('Y') && mockDatabase.includes(inputValue)
                 ? `🚀 Отправить: ${inputValue}`
+                : inputValue.trim() && inputValue.length === 10 && inputValue.startsWith('Y') && !mockDatabase.includes(inputValue)
+                ? `❌ Не найден в БД: ${inputValue}`
                 : inputValue.trim()
                   ? `⚠️ Введите полный код Y + 9 символов (${inputValue.length}/10)`
                   : '✨ Введите код Y123456789'
