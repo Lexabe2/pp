@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ArrowLeft, LogOut, QrCode } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import QRScanner from "./QRScanner"; // подключаем твой компонент
+import QRScanner from "./QRScanner";
 
 export default function HeaderActions({ onLogout }) {
   const navigate = useNavigate();
@@ -13,43 +13,47 @@ export default function HeaderActions({ onLogout }) {
 
   const handleQrScan = (result) => {
     console.log("Отсканировано:", result);
-    // здесь можешь вызвать API или что-то сохранить
   };
 
   return (
-    <header className="bg-white/80 backdrop-blur-xl border-b border-white/20 sticky top-0 z-50">
-      <div className="bg-white/80 backdrop-blur-xl border-b border-white/20 p-4">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          {/* Кнопка "На главную" */}
-          <button
-            onClick={handleBackToDashboard}
-            className="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition-colors duration-300 font-medium"
-          >
-            <ArrowLeft size={20} />
-            На главную
-          </button>
-
-          <div className="flex items-center gap-3">
-            {/* Кнопка сканера */}
+    <>
+      <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md border-b border-gray-200/50 z-50">
+        <div className="px-3 py-2">
+          <div className="flex justify-between items-center">
+            {/* Кнопка "На главную" - минимальная */}
             <button
-              onClick={() => setIsScannerOpen(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-xl transition-colors duration-300 font-medium"
+              onClick={handleBackToDashboard}
+              className="flex items-center gap-1 px-2 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all duration-200 text-sm active:scale-95"
             >
-              <QrCode size={20} />
-              Сканировать QR
+              <ArrowLeft size={14} />
+              <span className="hidden xs:inline text-xs">Главная</span>
             </button>
 
-            {/* Кнопка выхода */}
-            <button
-              onClick={onLogout}
-              className="flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl transition-colors duration-300 font-medium"
-            >
-              <LogOut size={20} />
-              Выйти
-            </button>
+            <div className="flex items-center gap-1.5">
+              {/* Кнопка сканера - минимальная */}
+              <button
+                onClick={() => setIsScannerOpen(true)}
+                className="flex items-center gap-1 px-2 py-1.5 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-all duration-200 text-sm active:scale-95"
+              >
+                <QrCode size={14} />
+                <span className="hidden xs:inline text-xs">QR</span>
+              </button>
+
+              {/* Кнопка выхода - минимальная */}
+              <button
+                onClick={onLogout}
+                className="flex items-center gap-1 px-2 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-all duration-200 text-sm active:scale-95"
+              >
+                <LogOut size={14} />
+                <span className="hidden xs:inline text-xs">Выход</span>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      </header>
+
+      {/* Отступ для фиксированного заголовка */}
+      <div className="h-12"></div>
 
       {/* QR-сканер */}
       <QRScanner
@@ -57,6 +61,6 @@ export default function HeaderActions({ onLogout }) {
         onClose={() => setIsScannerOpen(false)}
         onScan={handleQrScan}
       />
-    </header>
+    </>
   );
 }
