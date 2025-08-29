@@ -118,7 +118,7 @@ export default function Dashboard({ onLogout }) {
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/40 backdrop-blur-sm rounded-xl border border-white/30 text-sm text-slate-500">
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-            <span className="font-medium">Версия 0.0.6(Alfa)</span>
+            <span className="font-medium">Версия 0.0.7(Alfa)</span>
             <span className="text-slate-400">•</span>
             <span>Обновлено 29.08.2025 16:00</span>
           </div>

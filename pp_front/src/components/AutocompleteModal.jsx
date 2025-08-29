@@ -83,7 +83,7 @@ export default function AutocompleteModal({ isOpen, onClose, onSubmit }) {
       return a.localeCompare(b);
     });
 
-    setSuggestions(sorted.slice(0, 8)); // Максимум 8 подсказок
+    setSuggestions(sorted.slice(0, 2)); // Показываем только 2 подсказки
     setShowSuggestions(true);
     setSelectedIndex(-1);
     setIsLoading(false);
@@ -100,7 +100,9 @@ export default function AutocompleteModal({ isOpen, onClose, onSubmit }) {
   const handleKeyDown = (e) => {
     if (!showSuggestions || suggestions.length === 0) {
       if (e.key === 'Enter' && inputValue.trim()) {
-        handleSubmit();
+        if (inputValue.length === 10 && inputValue.startsWith('Y')) {
+          handleSubmit();
+        }
       }
       return;
     }
@@ -122,7 +124,7 @@ export default function AutocompleteModal({ isOpen, onClose, onSubmit }) {
         e.preventDefault();
         if (selectedIndex >= 0) {
           selectSuggestion(suggestions[selectedIndex]);
-        } else if (inputValue.trim()) {
+        } else if (inputValue.trim() && inputValue.length === 10 && inputValue.startsWith('Y')) {
           handleSubmit();
         }
         break;
@@ -160,7 +162,7 @@ export default function AutocompleteModal({ isOpen, onClose, onSubmit }) {
 
   // Отправка формы
   const handleSubmit = () => {
-    if (!inputValue.trim()) return;
+    if (!inputValue.trim() || inputValue.length !== 10 || !inputValue.startsWith('Y')) return;
 
     setIsAnimating(true);
 
@@ -220,7 +222,7 @@ export default function AutocompleteModal({ isOpen, onClose, onSubmit }) {
 
   return createPortal(
     <div className="fixed inset-0 bg-gradient-to-br from-slate-900/95 via-gray-900/90 to-black/95 backdrop-blur-lg z-50 flex flex-col justify-end sm:justify-center sm:items-center p-0 sm:p-4">
-      <div className={`bg-white/98 backdrop-blur-2xl rounded-t-3xl sm:rounded-3xl shadow-2xl w-full sm:max-w-lg overflow-hidden border-t border-white/30 sm:border border-white/20 ${
+      <div className={`bg-white/98 backdrop-blur-2xl rounded-t-3xl sm:rounded-3xl shadow-2xl w-full sm:max-w-md overflow-hidden border-t border-white/30 sm:border border-white/20 ${
         isAnimating ? 'animate-pulse' : 'animate-in slide-in-from-bottom-4 duration-300'
       }`}>
 
@@ -269,7 +271,7 @@ export default function AutocompleteModal({ isOpen, onClose, onSubmit }) {
         )}
 
         {/* Content */}
-        <div className="p-4 sm:p-6 space-y-4 sm:space-y-6 max-h-[80vh] sm:max-h-none overflow-y-auto">
+        <div className="p-4 sm:p-5 space-y-3 sm:space-y-4 max-h-[60vh] sm:max-h-none overflow-y-auto">
           {/* Main Input Section */}
           <div className="relative" ref={suggestionsRef}>
             {/* Input Field */}
@@ -318,13 +320,13 @@ export default function AutocompleteModal({ isOpen, onClose, onSubmit }) {
 
             {/* Suggestions Dropdown */}
             {showSuggestions && suggestions.length > 0 && (
-              <div className="absolute top-full left-0 right-0 mt-2 sm:mt-3 bg-white/98 backdrop-blur-2xl border border-blue-200 rounded-2xl shadow-2xl z-50 overflow-hidden animate-in slide-in-from-top-2 duration-200">
-                <div className="py-1 sm:py-2 max-h-72 sm:max-h-80 overflow-y-auto">
+              <div className="absolute top-full left-0 right-0 mt-2 bg-white/98 backdrop-blur-2xl border border-blue-200 rounded-2xl shadow-2xl z-50 overflow-hidden animate-in slide-in-from-top-2 duration-200">
+                <div className="py-1 sm:py-2">
                   {suggestions.map((suggestion, index) => (
                     <button
                       key={suggestion}
                       onClick={() => selectSuggestion(suggestion)}
-                      className={`w-full px-3 sm:px-4 py-3 sm:py-3.5 text-left font-mono text-sm sm:text-base transition-all duration-200 flex items-center gap-2 sm:gap-3 group ${
+                      className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 text-left font-mono text-sm sm:text-base transition-all duration-200 flex items-center gap-2 sm:gap-3 group ${
                         index === selectedIndex
                           ? 'bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 border-l-4 border-blue-500 shadow-sm'
                           : 'hover:bg-gradient-to-r hover:from-slate-50 hover:to-blue-50/30 text-slate-700 active:bg-blue-50'
@@ -342,11 +344,13 @@ export default function AutocompleteModal({ isOpen, onClose, onSubmit }) {
                 </div>
 
                 {/* Footer */}
-                <div className="px-3 sm:px-4 py-2 sm:py-3 bg-gradient-to-r from-blue-50 to-indigo-50 border-t border-blue-100">
+                <div className="px-3 sm:px-4 py-2 bg-gradient-to-r from-blue-50 to-indigo-50 border-t border-blue-100">
                   <div className="flex items-center justify-between text-xs text-blue-600">
                     <span className="flex items-center gap-1">
                       <TrendingUp size={10} sm:size={12} />
-                      {suggestions.length} найдено
+                      Показано 2 из {mockDatabase.filter(item =>
+                        item.toLowerCase().includes(inputValue.toLowerCase())
+                      ).length}
                     </span>
                     <div className="hidden sm:flex items-center gap-3 text-blue-500">
                       <span className="flex items-center gap-1 text-xs">
@@ -365,24 +369,29 @@ export default function AutocompleteModal({ isOpen, onClose, onSubmit }) {
           {/* Submit Button */}
           <button
             onClick={handleSubmit}
-            disabled={!inputValue.trim()}
+            disabled={!inputValue.trim() || inputValue.length !== 10 || !inputValue.startsWith('Y')}
             className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 hover:from-blue-600 hover:via-indigo-600 hover:to-purple-600 disabled:from-gray-300 disabled:via-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed text-white font-bold rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl disabled:shadow-none transform hover:scale-[1.02] active:scale-[0.98] disabled:transform-none relative overflow-hidden group"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
             <span className="relative z-10 text-sm sm:text-base">
-              {inputValue.trim() ? `🚀 Отправить: ${inputValue}` : '✨ Введите код для отправки'}
+              {inputValue.trim() && inputValue.length === 10 && inputValue.startsWith('Y')
+                ? `🚀 Отправить: ${inputValue}`
+                : inputValue.trim()
+                  ? `⚠️ Введите полный код Y + 9 символов (${inputValue.length}/10)`
+                  : '✨ Введите код Y123456789'
+              }
             </span>
           </button>
 
           {/* Recent Searches */}
           {recentSearches.length > 0 && (
-            <div className="p-3 sm:p-4 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
-              <h3 className="text-xs sm:text-sm font-bold text-slate-800 mb-2 sm:mb-3 flex items-center gap-2">
+            <div className="p-3 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
+              <h3 className="text-xs sm:text-sm font-bold text-slate-800 mb-2 flex items-center gap-2">
                 <Clock size={14} sm:size={16} className="text-slate-500" />
                 Недавние поиски
                 <div className="w-1.5 sm:w-2 h-1.5 sm:h-2 bg-blue-400 rounded-full animate-pulse"></div>
               </h3>
-              <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
+              <div className="grid grid-cols-2 gap-2">
                 {recentSearches.map((search, index) => (
                   <button
                     key={`${search}-${index}`}
@@ -390,7 +399,7 @@ export default function AutocompleteModal({ isOpen, onClose, onSubmit }) {
                       setInputValue(search);
                       inputRef.current?.focus();
                     }}
-                    className="px-2 sm:px-3 py-1.5 sm:py-2 bg-white/90 hover:bg-white hover:shadow-md text-slate-700 rounded-xl text-xs sm:text-sm font-mono transition-all duration-200 hover:scale-105 active:scale-95 border border-slate-200/50 backdrop-blur-sm group"
+                    className="px-2 py-1.5 bg-white/90 hover:bg-white hover:shadow-md text-slate-700 rounded-xl text-xs font-mono transition-all duration-200 hover:scale-105 active:scale-95 border border-slate-200/50 backdrop-blur-sm group"
                   >
                     <span className="group-hover:animate-pulse tracking-wide">{search}</span>
                   </button>
@@ -400,17 +409,21 @@ export default function AutocompleteModal({ isOpen, onClose, onSubmit }) {
           )}
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-3 gap-2 sm:gap-3">
-            <div className="p-2 sm:p-3 bg-gradient-to-br from-blue-50 to-indigo-100 rounded-xl text-center border border-blue-200/50 backdrop-blur-sm group hover:scale-105 transition-transform duration-200">
-              <div className="text-base sm:text-lg font-bold text-blue-600 group-hover:animate-bounce">{mockDatabase.length}</div>
+          <div className="grid grid-cols-3 gap-2">
+            <div className="p-2 bg-gradient-to-br from-blue-50 to-indigo-100 rounded-xl text-center border border-blue-200/50 backdrop-blur-sm group hover:scale-105 transition-transform duration-200">
+              <div className="text-sm font-bold text-blue-600 group-hover:animate-bounce">{mockDatabase.length}</div>
               <div className="text-xs text-blue-700 font-medium">В базе</div>
             </div>
-            <div className="p-2 sm:p-3 bg-gradient-to-br from-green-50 to-emerald-100 rounded-xl text-center border border-green-200/50 backdrop-blur-sm group hover:scale-105 transition-transform duration-200">
-              <div className="text-base sm:text-lg font-bold text-green-600 group-hover:animate-bounce">{suggestions.length}</div>
+            <div className="p-2 bg-gradient-to-br from-green-50 to-emerald-100 rounded-xl text-center border border-green-200/50 backdrop-blur-sm group hover:scale-105 transition-transform duration-200">
+              <div className="text-sm font-bold text-green-600 group-hover:animate-bounce">
+                {mockDatabase.filter(item =>
+                  item.toLowerCase().includes(inputValue.toLowerCase())
+                ).length}
+              </div>
               <div className="text-xs text-green-700 font-medium">Найдено</div>
             </div>
-            <div className="p-2 sm:p-3 bg-gradient-to-br from-slate-50 to-gray-100 rounded-xl text-center border border-slate-200/50 backdrop-blur-sm group hover:scale-105 transition-transform duration-200">
-              <div className="text-base sm:text-lg font-bold text-slate-600 group-hover:animate-bounce">{recentSearches.length}</div>
+            <div className="p-2 bg-gradient-to-br from-slate-50 to-gray-100 rounded-xl text-center border border-slate-200/50 backdrop-blur-sm group hover:scale-105 transition-transform duration-200">
+              <div className="text-sm font-bold text-slate-600 group-hover:animate-bounce">{recentSearches.length}</div>
               <div className="text-xs text-slate-700 font-medium">Недавних</div>
             </div>
           </div>
