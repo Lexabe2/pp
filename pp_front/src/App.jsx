@@ -32,7 +32,7 @@ export default function App() {
         <Routes>
             <Route path="/" element={<Dashboard onLogout={handleLogout}/>}/>
             <Route path="/users" element={<UsersPage onLogout={handleLogout}/>}/>
-            <Route path="/test" element={<HomePage onLogout={handleLogout}/>}/>
+            <Route path="/home" element={<HomePage onLogout={handleLogout}/>}/>
             <Route path="*" element={<Navigate to="/" replace/>}/>
         </Routes>
     );

@@ -49,7 +49,8 @@ ROOT_URLCONF = 'PP_bac.urls'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    'https://pp-bao.ru',
+    "https://pp-bao.ru",        # фронтенд
+    "https://api.pp-bao.ru",    # API (если запросы идут с него же)
 ]
 
 TEMPLATES = [
