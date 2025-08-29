@@ -129,7 +129,24 @@ export default function Dashboard({onLogout}) {
                     <LogOut className="h-5 w-5"/>
                     Выйти из системы
                 </motion.button>
+                {/* Version Block */}
+                <motion.div
+                    className="mt-6 text-center"
+                    initial={{opacity: 0}}
+                    animate={{opacity: 1}}
+                    transition={{delay: 1.2, duration: 0.5}}
+                >
+                    <div
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-white/40 backdrop-blur-sm rounded-xl border border-white/30 text-sm text-slate-500">
+                        <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                        <span className="font-medium">Версия 0.0.2</span>
+                        <span className="text-slate-400">•</span>
+                        <span>Обновлено 29.08.2025 09:30</span>
+                    </div>
+
+                </motion.div>
             </motion.div>
         </div>
-    );
+    )
+        ;
 }

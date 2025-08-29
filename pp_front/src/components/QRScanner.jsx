@@ -14,6 +14,7 @@ export default function QRScanner({ isOpen, onClose, onScan }) {
   const [zoomLevel, setZoomLevel] = useState(1);
   const canvasRef = useRef(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [manualInput, setManualInput] = useState('');
 
   // Дополнительная обработка для маленьких QR-кодов
   const processImageForSmallQR = async () => {
@@ -195,6 +196,7 @@ export default function QRScanner({ isOpen, onClose, onScan }) {
       console.log('Zoom not supported on this device');
     }
   };
+
   const handleClose = () => {
     if (scannerRef.current) {
       scannerRef.current.stop();
@@ -202,55 +204,88 @@ export default function QRScanner({ isOpen, onClose, onScan }) {
     setScannedResult('');
     setError('');
     setZoomLevel(1);
+    setManualInput('');
     onClose();
+  };
+
+  const handleManualSubmit = () => {
+    if (manualInput.trim()) {
+      setScannedResult(manualInput.trim());
+      onScan(manualInput.trim());
+      setTimeout(() => onClose(), 1500);
+    }
+  };
+
+  const handleManualInputKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleManualSubmit();
+    }
   };
 
   if (!isOpen) return null;
 
   return createPortal(
-    <div className="fixed inset-0 bg-black/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden">
+    <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden border border-gray-100">
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-4 text-white">
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 text-white relative overflow-hidden">
+          {/* Background pattern */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute top-0 left-0 w-32 h-32 bg-white rounded-full -translate-x-16 -translate-y-16"></div>
+            <div className="absolute bottom-0 right-0 w-24 h-24 bg-white rounded-full translate-x-12 translate-y-12"></div>
+          </div>
+
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Camera size={24} />
-              <h2 className="text-xl font-semibold">Сканирование QR-кода</h2>
+              <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
+                <Camera size={24} />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold">Сканер QR-кодов</h2>
+                <p className="text-blue-100 text-sm">Наведите на код или введите вручную</p>
+              </div>
             </div>
             <button
               onClick={handleClose}
-              className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+              className="p-2 hover:bg-white/20 rounded-xl transition-all duration-200 hover:scale-110"
             >
               <X size={20} />
             </button>
           </div>
         </div>
 
+
         {/* Scanner Content */}
-        <div className="p-8">
+        <div className="p-6">
           {error ? (
-            <div className="text-center py-12">
-              <AlertCircle className="mx-auto mb-4 text-red-500" size={48} />
-              <p className="text-red-600 font-medium mb-4">{error}</p>
+            <div className="text-center py-16">
+              <div className="p-4 bg-red-50 rounded-2xl inline-block mb-4">
+                <AlertCircle className="text-red-500" size={48} />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">Ошибка камеры</h3>
+              <p className="text-red-600 mb-6">{error}</p>
               <button
                 onClick={handleClose}
-                className="px-6 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
+                className="px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl transition-all duration-200 font-medium hover:shadow-lg"
               >
                 Закрыть
               </button>
             </div>
           ) : scannedResult ? (
-            <div className="text-center py-12">
-              <CheckCircle className="mx-auto mb-4 text-green-500" size={48} />
-              <p className="text-green-600 font-medium mb-2">QR-код успешно отсканирован!</p>
-              <div className="bg-gray-100 p-3 rounded-lg mb-4">
-                <p className="text-sm text-gray-600 break-all">{scannedResult}</p>
+            <div className="text-center py-16">
+              <div className="p-4 bg-green-50 rounded-2xl inline-block mb-4">
+                <CheckCircle className="text-green-500" size={48} />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">Успешно!</h3>
+              <p className="text-green-600 font-medium mb-4">QR-код отсканирован</p>
+              <div className="bg-gray-50 p-4 rounded-xl mb-4 border border-gray-200">
+                <p className="text-sm text-gray-700 break-all font-mono">{scannedResult}</p>
               </div>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-6">
               {/* Video Container */}
-              <div className="relative bg-black rounded-xl overflow-hidden aspect-square">
+              <div className="relative bg-gradient-to-br from-gray-900 to-black rounded-2xl overflow-hidden aspect-square shadow-inner">
                 <video
                   ref={videoRef}
                   className="w-full h-full object-cover"
@@ -269,21 +304,21 @@ export default function QRScanner({ isOpen, onClose, onScan }) {
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="relative">
                     {/* Scanning Frame */}
-                    <div className="w-48 h-48 border-2 border-white/50 rounded-xl relative">
+                    <div className="w-56 h-56 border-2 border-white/70 rounded-2xl relative shadow-lg">
                       {/* Corner indicators */}
-                      <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-blue-400 rounded-tl-lg"></div>
-                      <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-blue-400 rounded-tr-lg"></div>
-                      <div className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-blue-400 rounded-bl-lg"></div>
-                      <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-blue-400 rounded-br-lg"></div>
+                      <div className="absolute -top-1 -left-1 w-10 h-10 border-t-4 border-l-4 border-blue-400 rounded-tl-2xl shadow-lg"></div>
+                      <div className="absolute -top-1 -right-1 w-10 h-10 border-t-4 border-r-4 border-blue-400 rounded-tr-2xl shadow-lg"></div>
+                      <div className="absolute -bottom-1 -left-1 w-10 h-10 border-b-4 border-l-4 border-blue-400 rounded-bl-2xl shadow-lg"></div>
+                      <div className="absolute -bottom-1 -right-1 w-10 h-10 border-b-4 border-r-4 border-blue-400 rounded-br-2xl shadow-lg"></div>
 
                       {/* Scanning line animation */}
-                      <div className="absolute inset-x-0 top-1/2 h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent animate-pulse transform -translate-y-1/2"></div>
+                      <div className="absolute inset-x-2 top-1/2 h-1 bg-gradient-to-r from-transparent via-blue-400 to-transparent animate-pulse transform -translate-y-1/2 rounded-full shadow-lg"></div>
                     </div>
 
                     {/* Индикатор дополнительной обработки */}
                     {isProcessing && (
-                      <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2">
-                        <div className="bg-blue-500 text-white px-3 py-1 rounded-full text-xs">
+                      <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2">
+                        <div className="bg-blue-500 text-white px-4 py-2 rounded-full text-xs font-medium shadow-lg animate-pulse">
                           Анализ...
                         </div>
                       </div>
@@ -292,41 +327,69 @@ export default function QRScanner({ isOpen, onClose, onScan }) {
                 </div>
 
                 {/* Zoom Controls */}
-                <div className="absolute bottom-4 right-4 flex flex-col gap-2">
+                <div className="absolute bottom-4 right-4 flex flex-col gap-3">
                   <button
                     onClick={() => handleZoom('in')}
                     disabled={zoomLevel >= 3}
-                    className="p-2 bg-black/50 hover:bg-black/70 text-white rounded-lg transition-colors disabled:opacity-50"
+                    className="p-3 bg-white/90 hover:bg-white text-gray-800 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl hover:scale-105"
                   >
-                    <ZoomIn size={20} />
+                    <ZoomIn size={18} />
                   </button>
                   <button
                     onClick={() => handleZoom('out')}
                     disabled={zoomLevel <= 1}
-                    className="p-2 bg-black/50 hover:bg-black/70 text-white rounded-lg transition-colors disabled:opacity-50"
+                    className="p-3 bg-white/90 hover:bg-white text-gray-800 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl hover:scale-105"
                   >
-                    <ZoomOut size={20} />
+                    <ZoomOut size={18} />
                   </button>
                 </div>
+
                 {/* Loading indicator */}
                 {!isScanning && !error && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm">
                     <div className="text-white text-center">
-                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-2"></div>
-                      <p className="text-sm">Запуск камеры...</p>
+                      <div className="animate-spin rounded-full h-12 w-12 border-4 border-white/30 border-t-white mx-auto mb-4"></div>
+                      <p className="text-sm font-medium">Запуск камеры...</p>
                     </div>
                   </div>
                 )}
               </div>
 
               {/* Instructions */}
-              <div className="text-center text-gray-600">
-                <p className="text-sm">
-                  Наведите камеру на QR-код. Держите устойчиво для маленьких кодов.
-                </p>
-                <p className="text-xs mt-1 text-gray-500">
-                  Зум: {zoomLevel}x {isProcessing && '• Анализ изображения...'}
-                </p>
+              <div className="text-center">
+                <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-4">
+                  <p className="text-sm text-blue-800 font-medium mb-1">
+                    Наведите камеру на QR-код
+                  </p>
+                  <p className="text-xs text-blue-600">
+                    Зум: {zoomLevel}x {isProcessing && '• Анализ изображения...'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Manual Input Section */}
+              <div className="bg-gray-50 rounded-2xl p-6 border border-gray-200">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
+                  <h3 className="text-sm font-semibold text-gray-700">Ручной ввод</h3>
+                </div>
+                <div className="space-y-3">
+                  <input
+                    type="text"
+                    value={manualInput}
+                    onChange={(e) => setManualInput(e.target.value)}
+                    onKeyPress={handleManualInputKeyPress}
+                    placeholder="Введите содержимое QR-кода"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm transition-all duration-200 bg-white shadow-sm"
+                  />
+                  <button
+                    onClick={handleManualSubmit}
+                    disabled={!manualInput.trim()}
+                    className="w-full px-4 py-3 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 disabled:from-gray-300 disabled:to-gray-300 disabled:cursor-not-allowed text-white rounded-xl transition-all duration-200 text-sm font-semibold shadow-lg hover:shadow-xl hover:scale-[1.02] disabled:hover:scale-100 disabled:hover:shadow-lg"
+                  >
+                    {manualInput.trim() ? 'Подтвердить' : 'Введите код'}
+                  </button>
+                </div>
               </div>
             </div>
           )}
