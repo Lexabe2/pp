@@ -13,6 +13,7 @@
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/postcss": "^4.1.12",
     "@tailwindcss/vite": "^4.1.12",
+    "axios": "^1.11.0",
     "framer-motion": "^12.23.12",
     "jsqr": "^1.4.0",
     "lucide-react": "^0.542.0",

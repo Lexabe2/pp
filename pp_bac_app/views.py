@@ -9,6 +9,8 @@ from telegram import Bot
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 import asyncio
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 
 BOT_TOKEN = "8367247978:AAE1cPfVbxBQF5nxcnJTzQL3ZpI2LIJjO3E"
 
@@ -77,3 +79,11 @@ def verify_telegram_code(request):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all().select_related('profile')
     serializer_class = UserSerializer
+
+
+class MeView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
