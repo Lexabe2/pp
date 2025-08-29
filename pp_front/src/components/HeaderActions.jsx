@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import { ArrowLeft, LogOut, QrCode } from "lucide-react";
+import { ArrowLeft, LogOut, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import QRScanner from "./QRScanner";
+import AutocompleteModal from "./AutocompleteModal";
 
 export default function HeaderActions({ onLogout }) {
   const navigate = useNavigate();
-  const [isScannerOpen, setIsScannerOpen] = useState(false);
+  const [isAutocompleteOpen, setIsAutocompleteOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
@@ -34,8 +34,9 @@ export default function HeaderActions({ onLogout }) {
     navigate("/dashboard");
   };
 
-  const handleQrScan = (result) => {
-    console.log("Отсканировано:", result);
+  const handleAutocompleteSubmit = (result) => {
+    console.log("Выбрано:", result);
+    // Здесь можно добавить логику обработки выбранного значения
   };
 
   return (
@@ -57,14 +58,13 @@ export default function HeaderActions({ onLogout }) {
 
             {/* Action buttons - floating style */}
             <div className="flex items-center gap-2">
-              {/* QR Scanner button */}
+              {/* Autocomplete Search button */}
               <button
-                onClick={() => setIsScannerOpen(true)}
-                className="relative p-3 bg-gradient-to-br from-blue-500/90 to-indigo-600/90 hover:from-blue-500 hover:to-indigo-600 text-white rounded-2xl transition-all duration-300 active:scale-95 shadow-lg hover:shadow-xl group overflow-hidden"
+                onClick={() => setIsAutocompleteOpen(true)}
+                className="relative p-3 bg-gradient-to-br from-green-500/90 to-emerald-600/90 hover:from-green-500 hover:to-emerald-600 text-white rounded-2xl transition-all duration-300 active:scale-95 shadow-lg hover:shadow-xl group overflow-hidden"
               >
-                {/* Subtle glow effect */}
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-400/0 via-white/20 to-blue-400/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
-                <QrCode size={18} className="relative z-10" />
+                <Search size={18} className="relative z-10" />
               </button>
 
               {/* Logout button */}
@@ -72,7 +72,6 @@ export default function HeaderActions({ onLogout }) {
                 onClick={onLogout}
                 className="relative p-3 bg-gradient-to-br from-red-500/90 to-rose-600/90 hover:from-red-500 hover:to-rose-600 text-white rounded-2xl transition-all duration-300 active:scale-95 shadow-lg hover:shadow-xl group overflow-hidden"
               >
-                {/* Subtle glow effect */}
                 <div className="absolute inset-0 bg-gradient-to-r from-red-400/0 via-white/20 to-red-400/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
                 <LogOut size={18} className="relative z-10" />
               </button>
@@ -84,11 +83,11 @@ export default function HeaderActions({ onLogout }) {
       {/* Content offset */}
       <div className="h-16"></div>
 
-      {/* QR Scanner */}
-      <QRScanner
-        isOpen={isScannerOpen}
-        onClose={() => setIsScannerOpen(false)}
-        onScan={handleQrScan}
+      {/* Autocomplete Modal */}
+      <AutocompleteModal
+        isOpen={isAutocompleteOpen}
+        onClose={() => setIsAutocompleteOpen(false)}
+        onSubmit={handleAutocompleteSubmit}
       />
     </>
   );
