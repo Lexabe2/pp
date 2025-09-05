@@ -1,7 +1,7 @@
 # pp_bac_app/serializers.py
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import UserProfile
+from .models import UserProfile, Operation, Atm
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -58,3 +58,17 @@ class UserSerializer(serializers.ModelSerializer):
         profile.save()
 
         return instance
+
+
+class OperationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Operation
+        fields = ['id', 'name', 'duration_minutes']
+
+
+class AtmSerializer(serializers.ModelSerializer):
+    operations = serializers.PrimaryKeyRelatedField(queryset=Operation.objects.all(), many=True)
+
+    class Meta:
+        model = Atm
+        fields = ['id', 'sn', 'operations']

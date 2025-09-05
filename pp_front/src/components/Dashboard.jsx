@@ -9,7 +9,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 const allFeatures = [
   { icon: Home, title: 'Главная', desc: 'Здесь собрана вся важная информация', roles: ['admin', 'moderator', 'user'], delay: 0.2 },
   { icon: Users, title: 'Команда', desc: 'Работайте с коллегами эффективно', roles: ['admin', 'moderator'], delay: 0.3 },
-  { icon: Star, title: 'Избранное', desc: 'Быстрый доступ к важному', roles: ['admin', 'user'], delay: 0.4 },
+  { icon: Star, title: 'Редактирование работ', desc: 'Изменение и добавление работ', roles: ['admin'], delay: 0.4 },
   { icon: TrendingUp, title: 'Аналитика', desc: 'Отслеживайте прогресс', roles: ['admin'], delay: 0.5 },
 ];
 
@@ -37,7 +37,7 @@ export default function Dashboard({ onLogout }) {
     switch(feature.title) {
       case 'Команда': navigate('/users'); break;
       case 'Главная': navigate('/home'); break;
-      case 'Задачи': navigate('/tasks'); break;
+      case 'Редактирование работ': navigate('/editing_works'); break;
       default: break;
     }
   };
@@ -118,9 +118,9 @@ export default function Dashboard({ onLogout }) {
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/40 backdrop-blur-sm rounded-xl border border-white/30 text-sm text-slate-500">
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-            <span className="font-medium">Версия 0.0.8(Alfa)</span>
+            <span className="font-medium">Версия 0.1.1(Alfa)</span>
             <span className="text-slate-400">•</span>
-            <span>Обновлено 29.08.2025 16:00</span>
+            <span>Обновлено 05.09.2025 16:00</span>
           </div>
         </motion.div>
       </motion.div>

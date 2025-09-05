@@ -33,12 +33,17 @@ class Flow(models.Model):
 
 class Operation(models.Model):
     name = models.CharField(max_length=255, unique=True)
+    duration_minutes = models.PositiveIntegerField(
+        verbose_name="Время (минуты)",
+        help_text="Сколько минут занимает выполнение работы",
+        default=0
+    )
 
     def __str__(self):
-        return self.name
+        return f"{self.name} ({self.duration_minutes} мин)"
 
     class Meta:
-        verbose_name = "Работа"  # название модели в единственном числе
+        verbose_name = "Работа"
         verbose_name_plural = "Работы"
 
 

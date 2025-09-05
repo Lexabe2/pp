@@ -1,6 +1,6 @@
 from rest_framework import viewsets
 from django.contrib.auth.models import User
-from .serializers import UserSerializer
+from .serializers import UserSerializer, OperationSerializer, AtmSerializer
 from django.contrib.auth import authenticate
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
@@ -11,6 +11,7 @@ from rest_framework.permissions import AllowAny
 import asyncio
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
+from .models import Operation, Atm
 
 BOT_TOKEN = "8367247978:AAE1cPfVbxBQF5nxcnJTzQL3ZpI2LIJjO3E"
 
@@ -87,3 +88,14 @@ class MeView(APIView):
     def get(self, request):
         serializer = UserSerializer(request.user)
         return Response(serializer.data)
+
+
+class OperationViewSet(viewsets.ModelViewSet):
+    queryset = Operation.objects.all()
+    serializer_class = OperationSerializer
+    permission_classes = [IsAuthenticated]  # любой авторизованный пользователь
+
+
+class AtmViewSet(viewsets.ModelViewSet):
+    queryset = Atm.objects.all()
+    serializer_class = AtmSerializer
