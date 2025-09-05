@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Edit3, Trash2, Save, X, Plus, Search, Filter, Activity, Clock, Hash } from "lucide-react";
+import { Edit3, Trash2, Save, X, Plus, Search, Filter, Activity, Clock, Hash, ArrowLeft } from "lucide-react";
 
 const OperationsManager = () => {
   const [operations, setOperations] = useState([]);
@@ -107,6 +107,11 @@ const OperationsManager = () => {
     return `${minutes} мин`;
   };
 
+  // Функция для возврата назад
+  const handleGoBack = () => {
+    window.history.back();
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center">
@@ -135,6 +140,17 @@ const OperationsManager = () => {
 
       <div className="relative z-10 py-6 sm:py-12 px-4">
         <div className="max-w-7xl mx-auto">
+          {/* Кнопка назад */}
+          <div className="mb-6">
+            <button
+              onClick={handleGoBack}
+              className="flex items-center gap-2 text-slate-600 hover:text-slate-900 font-medium transition-colors duration-200 group"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Назад
+            </button>
+          </div>
+
           {/* Заголовок */}
           <div className="text-center mb-8 sm:mb-12">
             <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl mb-6 shadow-xl">
