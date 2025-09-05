@@ -1,48 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { Search, Database, CheckCircle, X, Loader2, ArrowUp, ArrowDown, Clock, Sparkles, Zap, TrendingUp } from 'lucide-react';
+import { Search, CheckCircle, X, Loader2, ArrowUp, ArrowDown, Clock, Sparkles, TrendingUp } from 'lucide-react';
 
 // Симуляция базы данных (позже заменим на Supabase)
 const mockDatabase = [
-  'Y123456789',
-  'Y987654321',
-  'Y456789123',
-  'Y789123456',
-  'Y321654987',
-  'Y654987321',
-  'Y147258369',
-  'Y963852741',
-  'Y258147963',
-  'Y741852963',
-  'Y159357486',
-  'Y486159357',
-  'Y357486159',
-  'Y852963741',
-  'Y963741852',
-  'Y111222333',
-  'Y444555666',
-  'Y777888999',
-  'Y000111222',
-  'Y333444555',
-  'Y555666777',
-  'Y888999000',
-  'Y222333444',
-  'Y666777888',
-  'Y999000111',
-  'Y101010101',
-  'Y202020202',
-  'Y303030303',
-  'Y404040404',
-  'Y505050505',
-  'Y606060606',
-  'Y707070707',
-  'Y808080808',
-  'Y909090909',
-  'Y121212121',
-  'Y131313131',
-  'Y141414141',
-  'Y151515151',
-  'Y161616161'
+  'Y123456789'
 ];
 
 export default function AutocompleteModal({ isOpen, onClose, onSubmit }) {
