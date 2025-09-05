@@ -1,11 +1,14 @@
 import os
 from pathlib import Path
-from decouple import config
+from decouple import config, Config, RepositoryEnv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = True
+
+env_path = os.path.join(BASE_DIR, '.env')
+config = Config(RepositoryEnv(env_path))
 
 ALLOWED_HOSTS = ['pp-bao.ru', 'api.pp-bao.ru', 'localhost', '127.0.0.1']
 
