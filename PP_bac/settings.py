@@ -1,17 +1,35 @@
 import os
 from pathlib import Path
-from decouple import config, Config, RepositoryEnv
+from decouple import Config, RepositoryEnv
 
+# -----------------------------------
+# Базовые пути
+# -----------------------------------
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = config('SECRET_KEY')
-DEBUG = True
-
+# -----------------------------------
+# .env файл
+# -----------------------------------
 env_path = os.path.join(BASE_DIR, '.env')
 config = Config(RepositoryEnv(env_path))
 
-ALLOWED_HOSTS = ['pp-bao.ru', 'api.pp-bao.ru', 'localhost', '127.0.0.1']
+# -----------------------------------
+# Основные настройки
+# -----------------------------------
+SECRET_KEY = config('SECRET_KEY')
+DEBUG = config('DEBUG', default=False, cast=bool)
+DJANGO_ENV = config('DJANGO_ENV', default='local')
 
+ALLOWED_HOSTS = [
+    'pp-bao.ru',
+    'api.pp-bao.ru',
+    'localhost',
+    '127.0.0.1',
+]
+
+# -----------------------------------
+# Приложения
+# -----------------------------------
 INSTALLED_APPS = [
     "rest_framework",
     'rest_framework.authtoken',
@@ -22,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'pp_bac_app'
+    'pp_bac_app',
 ]
 
 MIDDLEWARE = [
@@ -36,31 +54,32 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# -----------------------------------
+# REST Framework
+# -----------------------------------
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',  # Все эндпоинты требуют авторизации
+        'rest_framework.permissions.IsAuthenticated',
     ],
 }
 
 CORS_ALLOW_CREDENTIALS = True
-
-ROOT_URLCONF = 'PP_bac.urls'
-
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    "https://pp-bao.ru",        # фронтенд
-    "https://api.pp-bao.ru",    # API (если запросы идут с него же)
+    "https://pp-bao.ru",
+    "https://api.pp-bao.ru",
 ]
+
+ROOT_URLCONF = 'PP_bac.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -74,9 +93,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'PP_bac.wsgi.application'
 
-DJANGO_ENV = config('DJANGO_ENV', default='local')
-
-if DJANGO_ENV == "production":
+# -----------------------------------
+# База данных
+# -----------------------------------
+if DJANGO_ENV.lower() == "production":
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
@@ -94,31 +114,29 @@ else:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
+
+# -----------------------------------
+# Пароли
+# -----------------------------------
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
 ]
 
+# -----------------------------------
+# Локализация и время
+# -----------------------------------
 LANGUAGE_CODE = 'ru'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
+# -----------------------------------
+# Статика
+# -----------------------------------
 STATIC_URL = '/static/'
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
